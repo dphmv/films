@@ -1,117 +1,105 @@
-abstract class FilmCard {
-  const FilmCard(this.id, this.title, this.picture, this.voteAverage,
-      this.releaseDate, this.description, this.language);
+import 'package:flutter/material.dart';
+import 'package:films/domain/models/film_card_model.dart';
 
-  final String id;
-  final String title;
-  final String picture;
-  final double voteAverage;
-  final String releaseDate;
-  final String description;
-  final String language;
-
-  void aboutFilm();
+void main() {
+  runApp(const MyApp());
 }
 
-class Film extends FilmCard with LanguageConverter {
-  const Film({
-    required String id,
-    required String title,
-    required String picture,
-    required double voteAverage,
-    required String releaseDate,
-    required String description,
-    required String language,
-  }) : super(id, title, picture, voteAverage, releaseDate, description,
-            language);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  void aboutFilm() {
-    var languageType = getLanguage(language);
-    print('\nНазвание: $title,'
-        '\nРейтинг: $voteAverage,'
-        '\nДата выхода: $releaseDate,'
-        '\nОписание: $description,'
-        '\nЯзык фильма: ${languageType.toPrettyString()}');
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Фильмы',
+      theme: ThemeData(
+        primarySwatch: Colors.deepOrange,
+      ),
+      home: const HomePage(),
+    );
   }
 }
 
-Future<List<Film>> getFilmList() async {
-  List<Film> films = _getFilms();
-  for (final film in films) {
-    await Future.delayed(const Duration(seconds: 1));
-    film.aboutFilm();
-  }
-  List<Film> filterFilms = _filterFilm(films);
-  print('\nРейтинг фильма больше 9: ');
-  for (final film in filterFilms) {
-    film.aboutFilm();
-  }
-  return films;
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
 }
 
-List<Film> _filterFilm(List<Film> films) {
-  return films.where((element) => element.voteAverage > 9).toList();
-}
+class _HomePageState extends State<HomePage> {
+  final films = getFilms();
 
-Future<void> main() async {
-  print('Список фильмов: ');
-  await getFilmList();
-}
-
-List<Film> _getFilms() {
-  return [
-    const Film(
-        id: '0',
-        title: 'Зелёная миля',
-        picture: 'img',
-        voteAverage: 9.1,
-        releaseDate: '2000-03-03',
-        description: 'Обвиненный в страшном преступлении, Джон Коффи...',
-        language: 'english'),
-    const Film(
-        id: '1',
-        title: 'Побег из Шоушенка',
-        picture: 'img',
-        voteAverage: 8.9,
-        releaseDate: '1995-02-17',
-        description: 'Бухгалтер Энди Дюфрейн обвинён в убийстве...',
-        language: 'russian'),
-    const Film(
-        id: '2',
-        title: 'Список Шиндлера',
-        picture: 'img',
-        voteAverage: 8.8,
-        releaseDate: '1994-02-18',
-        description: 'Лента рассказывает реальную историю...',
-        language: 'another')
-  ];
-}
-
-enum Language { english, russian, another }
-
-mixin LanguageConverter {
-  Language getLanguage(String language) {
-    switch (language) {
-      case 'english':
-        return Language.english;
-      case 'russian':
-        return Language.russian;
-      default:
-        return Language.another;
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Список фильмов'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ...List.generate(films.length, (index) {
+              return FilmCard(
+                title: films[index].title,
+                language: films[index]
+                    .getLanguage(films[index].language)
+                    .toPrettyString(),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-extension LanguageExtension on Language {
-  String toPrettyString() {
-    switch (this) {
-      case Language.english:
-        return 'Английский';
-      case Language.russian:
-        return 'Русский';
-      case Language.another:
-        return 'Другой';
-    }
+class FilmCard extends StatelessWidget {
+  const FilmCard({
+    Key? key,
+    required this.title,
+    required this.language,
+  }) : super(key: key);
+
+  final String title;
+  final String language;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      color: Colors.white,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Image.network(
+              'https://www.meme-arsenal.com/memes/d6d9b7815ea8869153daa96c015ea875.jpg',
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Название: ' + title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  Text(
+                    'Язык фильма: ' + language,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
