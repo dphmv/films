@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:films/domain/models/film_card_model.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -29,7 +27,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final films = getFilms();
+  List<Film> films = [];
+
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    getFilms().then((value) {
+      setState(() {
+        films = value;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +50,35 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Row(
+              children: [
+                Checkbox(
+                  value: isChecked,
+                  onChanged: (bool? changeValue) {
+                    setState(() {
+                      isChecked = changeValue ?? false;
+                    });
+                  },
+                ),
+                const Text('Только на русском'),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await getFilms().then((valueFilms) {
+                  setState(() {
+                    if (isChecked) {
+                      films = valueFilms
+                          .where((element) => element.language == 'russian')
+                          .toList();
+                    } else {
+                      films = valueFilms;
+                    }
+                  });
+                });
+              },
+              child: const Text('Тык!'),
+            ),
             ...List.generate(films.length, (index) {
               return FilmCard(
                 title: films[index].title,

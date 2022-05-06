@@ -9,8 +9,6 @@ abstract class FilmCard {
   final String releaseDate;
   final String description;
   final String language;
-
-  void aboutFilm();
 }
 
 class Film extends FilmCard with LanguageConverter {
@@ -24,74 +22,63 @@ class Film extends FilmCard with LanguageConverter {
     required String language,
   }) : super(id, title, picture, voteAverage, releaseDate, description,
             language);
-
-  @override
-  void aboutFilm() {
-    var languageType = getLanguage(language);
-    print(
-      '\nНазвание: $title,'
-      '\nРейтинг: $voteAverage,'
-      '\nДата выхода: $releaseDate,'
-      '\nОписание: $description,'
-      '\nЯзык фильма: ${languageType.toPrettyString()}',
-    );
-  }
 }
 
-Future<List<Film>> getFilmList() async {
-  List<Film> films = getFilms();
+void main() {
+  print('Список фильмов: ');
+
+  List<Film> films = getFilms() as List<Film>;
+
   for (final film in films) {
-    await Future.delayed(const Duration(seconds: 1));
-    film.aboutFilm();
+    film;
   }
 
   List<Film> filterFilms = _filterFilm(films);
-  await Future.delayed(const Duration(seconds: 1));
+
   print('\nРейтинг фильма больше 9: ');
+
   for (final film in filterFilms) {
-    film.aboutFilm();
+    film;
   }
-  return films;
 }
 
 List<Film> _filterFilm(List<Film> films) {
   return films.where((element) => element.voteAverage > 9).toList();
 }
 
-Future<void> main() async {
-  print('Список фильмов: ');
-  await getFilmList();
-}
-
-List<Film> getFilms() {
+Future<List<Film>> getFilms() async {
+  await Future.delayed(const Duration(seconds: 1));
   return [
     const Film(
-        id: '0',
-        title: 'Зелёная миля',
-        picture:
-            'https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/acb932eb-c7d0-42de-92df-f5f306c4c48e/1920x',
-        voteAverage: 9.1,
-        releaseDate: '1999-12-06',
-        description: 'Обвиненный в страшном преступлении, Джон Коффи...',
-        language: 'english'),
+      id: '0',
+      title: 'Зелёная миля',
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/acb932eb-c7d0-42de-92df-f5f306c4c48e/1920x',
+      voteAverage: 9.1,
+      releaseDate: '1999-12-06',
+      description: 'Обвиненный в страшном преступлении, Джон Коффи...',
+      language: 'english',
+    ),
     const Film(
-        id: '1',
-        title: 'Побег из Шоушенка',
-        picture:
-            'https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/e26044e5-2d5a-4b38-a133-a776ad93366f/1920x',
-        voteAverage: 9.1,
-        releaseDate: '1994-09-10',
-        description: 'Бухгалтер Энди Дюфрейн обвинён в убийстве...',
-        language: 'russian'),
+      id: '1',
+      title: 'Побег из Шоушенка',
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/e26044e5-2d5a-4b38-a133-a776ad93366f/1920x',
+      voteAverage: 9.1,
+      releaseDate: '1994-09-10',
+      description: 'Бухгалтер Энди Дюфрейн обвинён в убийстве...',
+      language: 'russian',
+    ),
     const Film(
-        id: '2',
-        title: 'Список Шиндлера',
-        picture:
-            'https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/ad682589-603d-40c1-b63a-fe01af9f3012/1920x',
-        voteAverage: 8.8,
-        releaseDate: '1993-11-30',
-        description: 'Лента рассказывает реальную историю...',
-        language: 'german')
+      id: '2',
+      title: 'Список Шиндлера',
+      picture:
+          'https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/ad682589-603d-40c1-b63a-fe01af9f3012/1920x',
+      voteAverage: 8.8,
+      releaseDate: '1993-11-30',
+      description: 'Лента рассказывает реальную историю...',
+      language: 'german',
+    )
   ];
 }
 
