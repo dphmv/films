@@ -1,115 +1,117 @@
-import 'package:flutter/material.dart';
+abstract class FilmCard {
+  const FilmCard(this.id, this.title, this.picture, this.voteAverage,
+      this.releaseDate, this.description, this.language);
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
+  final String id;
   final String title;
+  final String picture;
+  final double voteAverage;
+  final String releaseDate;
+  final String description;
+  final String language;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  void aboutFilm();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class Film extends FilmCard with LanguageConverter {
+  const Film({
+    required String id,
+    required String title,
+    required String picture,
+    required double voteAverage,
+    required String releaseDate,
+    required String description,
+    required String language,
+  }) : super(id, title, picture, voteAverage, releaseDate, description,
+            language);
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+  void aboutFilm() {
+    var languageType = getLanguage(language);
+    print('\nНазвание: $title,'
+        '\nРейтинг: $voteAverage,'
+        '\nДата выхода: $releaseDate,'
+        '\nОписание: $description,'
+        '\nЯзык фильма: ${languageType.toPrettyString()}');
+  }
+}
+
+Future<List<Film>> getFilmList() async {
+  List<Film> films = _getFilms();
+  for (final film in films) {
+    await Future.delayed(const Duration(seconds: 1));
+    film.aboutFilm();
+  }
+  List<Film> filterFilms = _filterFilm(films);
+  print('\nРейтинг фильма больше 9: ');
+  for (final film in filterFilms) {
+    film.aboutFilm();
+  }
+  return films;
+}
+
+List<Film> _filterFilm(List<Film> films) {
+  return films.where((element) => element.voteAverage > 9).toList();
+}
+
+Future<void> main() async {
+  print('Список фильмов: ');
+  await getFilmList();
+}
+
+List<Film> _getFilms() {
+  return [
+    const Film(
+        id: '0',
+        title: 'Зелёная миля',
+        picture: 'img',
+        voteAverage: 9.1,
+        releaseDate: '2000-03-03',
+        description: 'Обвиненный в страшном преступлении, Джон Коффи...',
+        language: 'english'),
+    const Film(
+        id: '1',
+        title: 'Побег из Шоушенка',
+        picture: 'img',
+        voteAverage: 8.9,
+        releaseDate: '1995-02-17',
+        description: 'Бухгалтер Энди Дюфрейн обвинён в убийстве...',
+        language: 'russian'),
+    const Film(
+        id: '2',
+        title: 'Список Шиндлера',
+        picture: 'img',
+        voteAverage: 8.8,
+        releaseDate: '1994-02-18',
+        description: 'Лента рассказывает реальную историю...',
+        language: 'another')
+  ];
+}
+
+enum Language { english, russian, another }
+
+mixin LanguageConverter {
+  Language getLanguage(String language) {
+    switch (language) {
+      case 'english':
+        return Language.english;
+      case 'russian':
+        return Language.russian;
+      default:
+        return Language.another;
+    }
+  }
+}
+
+extension LanguageExtension on Language {
+  String toPrettyString() {
+    switch (this) {
+      case Language.english:
+        return 'Английский';
+      case Language.russian:
+        return 'Русский';
+      case Language.another:
+        return 'Другой';
+    }
   }
 }
