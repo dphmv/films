@@ -36,10 +36,6 @@ class _CatalogPageState extends State<CatalogPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.pushNamed(

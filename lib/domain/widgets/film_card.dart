@@ -1,6 +1,8 @@
+import 'package:films/components/widgets/favorite_button.dart';
 import 'package:films/components/widgets/image_network.dart';
 import 'package:films/components/widgets/primary_button.dart';
 import 'package:films/domain/models/film_card_model.dart';
+import 'package:films/presentation/detailed/detailed_page.dart';
 import 'package:flutter/material.dart';
 
 class FilmCard extends StatelessWidget {
@@ -9,6 +11,8 @@ class FilmCard extends StatelessWidget {
     required this.title,
     required this.picture,
     required this.voteAverage,
+    required this.releaseDate,
+    required this.description,
     Key? key,
   }) : super(key: key);
 
@@ -16,6 +20,8 @@ class FilmCard extends StatelessWidget {
   final String title;
   final String picture;
   final double voteAverage;
+  final String releaseDate;
+  final String description;
 
   factory FilmCard.fromFilmModel({
     required FilmCardModel model,
@@ -26,6 +32,8 @@ class FilmCard extends StatelessWidget {
       title: model.title,
       picture: model.picture,
       voteAverage: model.voteAverage,
+      releaseDate: model.releaseDate,
+      description: model.description,
       key: key,
     );
   }
@@ -53,6 +61,10 @@ class FilmCard extends StatelessWidget {
           Positioned(
             left: 5,
             child: _RatingChip(voteAverage),
+          ),
+          const Positioned(
+            right: 5,
+            child: FavoriteButton(),
           ),
           Positioned(
             left: 5,
@@ -82,7 +94,20 @@ class FilmCard extends StatelessWidget {
             bottom: 5,
             child: PrimaryButton(
               'Подробнее',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  '/detailed',
+                  arguments: DetailedArguments(
+                    id,
+                    title,
+                    picture,
+                    voteAverage,
+                    releaseDate,
+                    description,
+                  ),
+                );
+              },
             ),
           ),
         ],

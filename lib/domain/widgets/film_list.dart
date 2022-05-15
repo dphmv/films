@@ -3,12 +3,14 @@ import 'package:films/domain/widgets/film_tile.dart';
 import 'package:flutter/material.dart';
 
 class FilmList extends StatelessWidget {
-  const FilmList({Key? key}) : super(key: key);
+  const FilmList(this.films, {Key? key}) : super(key: key);
 
-  static const List<FilmCardModel> _films = <FilmCardModel>[
-    FilmCardModel(
+  final List<FilmCardModel> films;
+
+  static List<FilmCardModel> listOfFilms = <FilmCardModel>[
+    const FilmCardModel(
       id: 0,
-      title: 'Зелёная миля',
+      title: 'Зеленая миля',
       picture:
           'https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/acb932eb-c7d0-42de-92df-f5f306c4c48e/1920x',
       voteAverage: 9.1,
@@ -16,7 +18,7 @@ class FilmList extends StatelessWidget {
       description:
           'Обвиненный в страшном преступлении, Джон Коффи оказывается в блоке смертников тюрьмы «Холодная гора». Вновь прибывший обладал поразительным ростом и был пугающе спокоен, что, впрочем, никак не влияло на отношение к нему начальника блока Пола Эджкомба, привыкшего исполнять приговор.',
     ),
-    FilmCardModel(
+    const FilmCardModel(
       id: 1,
       title: 'Побег из Шоушенка',
       picture:
@@ -26,7 +28,7 @@ class FilmList extends StatelessWidget {
       description:
           'Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.',
     ),
-    FilmCardModel(
+    const FilmCardModel(
       id: 2,
       title: 'Список Шиндлера',
       picture:
@@ -36,7 +38,7 @@ class FilmList extends StatelessWidget {
       description:
           'Лента рассказывает реальную историю загадочного Оскара Шиндлера, члена нацистской партии, преуспевающего фабриканта, спасшего во время Второй мировой войны более тысячи ста евреев. Это триумф одного человека, не похожего на других, и драма тех, кто, благодаря ему, выжил в ужасный период человеческой истории.',
     ),
-    FilmCardModel(
+    const FilmCardModel(
       id: 3,
       title: 'Властелин колец: Возвращение короля',
       picture:
@@ -46,7 +48,7 @@ class FilmList extends StatelessWidget {
       description:
           'Последняя часть трилогии о Кольце Всевластия и о героях, взявших на себя бремя спасения Средиземья. Повелитель сил Тьмы Саурон направляет свои бесчисленные рати под стены Минас-Тирита, крепости Последней Надежды. Он предвкушает близкую победу, но именно это и мешает ему заметить две крохотные фигурки — хоббитов, приближающихся к Роковой Горе, где им предстоит уничтожить Кольцо Всевластия. Улыбнется ли им счастье.',
     ),
-    FilmCardModel(
+    const FilmCardModel(
       id: 4,
       title: 'Форрест Гамп',
       picture:
@@ -56,7 +58,7 @@ class FilmList extends StatelessWidget {
       description:
           'Сидя на автобусной остановке, Форрест Гамп — не очень умный, но добрый и открытый парень — рассказывает случайным встречным историю своей необыкновенной жизни.',
     ),
-    FilmCardModel(
+    const FilmCardModel(
       id: 5,
       title: '1+1',
       picture:
@@ -72,9 +74,12 @@ class FilmList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
+        final film = films[index % films.length];
         return Padding(
           padding: const EdgeInsets.all(5.0),
-          child: FilmTile.fromFilmModel(model: _films[index % _films.length]),
+          child: FilmTile.fromFilmModel(
+            model: film,
+          ),
         );
       },
     );
