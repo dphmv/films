@@ -1,4 +1,5 @@
 import 'package:films/components/widgets/not_found_page.dart';
+import 'package:films/presentation/detailed/detailed_page.dart';
 import 'package:films/presentation/main_page.dart';
 import 'package:films/presentation/settings/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,18 @@ class FilmApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) {
               return SettingsPage(
+                arguments: arguments,
+              );
+            },
+          );
+        }
+
+        if (settings.name == DetailedPage.path) {
+          final DetailedArguments arguments =
+              settings.arguments as DetailedArguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return DetailedPage(
                 arguments: arguments,
               );
             },

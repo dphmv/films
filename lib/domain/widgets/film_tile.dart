@@ -1,3 +1,4 @@
+import 'package:films/components/widgets/favorite_button.dart';
 import 'package:films/components/widgets/image_network.dart';
 import 'package:films/domain/models/film_card_model.dart';
 import 'package:flutter/material.dart';
@@ -109,6 +110,7 @@ class FilmTile extends StatelessWidget {
                                     : Colors.black,
                           ),
                         ),
+                        const FavoriteButton(),
                       ],
                     ),
                   ),

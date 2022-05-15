@@ -6,7 +6,9 @@ class NotFoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
       body: const Center(
         child: Text('Не знаем, что искать!'),
       ),
