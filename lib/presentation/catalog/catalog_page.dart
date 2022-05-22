@@ -3,6 +3,7 @@ import 'package:films/components/delayed_action.dart';
 import 'package:films/presentation/catalog/film_card.dart';
 import 'package:films/data/repositories/films_repository.dart';
 import 'package:films/domain/models/basic_model.dart';
+import 'package:films/presentation/main_page.dart';
 import 'package:films/presentation/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 
@@ -116,38 +117,41 @@ class _CatalogPageState extends State<CatalogPage> {
                 ),
         ],
       ),
-      body: FutureBuilder<BasicModel?>(
-        future: dataLoadingState,
-        builder: (BuildContext context, AsyncSnapshot<BasicModel?> data) {
-          return data.connectionState != ConnectionState.done
-              ? const Center(child: CircularProgressIndicator())
-              : data.hasData
-                  ? data.data?.film?.isNotEmpty == true
-                      ? Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: GridView.builder(
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: FilmCard.fromFilmModel(
-                                  model: data.data!.film![index],
-                                  key: ValueKey<int>(
-                                    data.data?.film?[index].id ?? -1,
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: FutureBuilder<BasicModel?>(
+          future: dataLoadingState,
+          builder: (BuildContext context, AsyncSnapshot<BasicModel?> data) {
+            return data.connectionState != ConnectionState.done
+                ? const Center(child: CircularProgressIndicator())
+                : data.hasData
+                    ? data.data?.film?.isNotEmpty == true
+                        ? Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: GridView.builder(
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: FilmCard.fromFilmModel(
+                                    model: data.data!.film![index],
+                                    key: ValueKey<int>(
+                                      data.data?.film?[index].id ?? -1,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            itemCount: data.data?.film?.length ?? 0,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 2 / 3,
+                                );
+                              },
+                              itemCount: data.data?.film?.length ?? 0,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 2 / 3,
+                              ),
                             ),
-                          ),
-                        )
-                      : const _Empty()
-                  : const _Missing();
-        },
+                          )
+                        : const _Empty()
+                    : const _Missing();
+          },
+        ),
       ),
     );
   }
@@ -172,6 +176,10 @@ class _CatalogPageState extends State<CatalogPage> {
       );
       setState(() {});
     });
+  }
+
+  Future<void> _refresh() async {
+    Navigator.pushReplacementNamed(context, MainPage.path);
   }
 }
 
