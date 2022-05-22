@@ -30,7 +30,7 @@ class PrimaryButton extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .button
-                      ?.copyWith(color: Colors.white, fontSize: 16),
+                      ?.copyWith(color: Colors.white),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

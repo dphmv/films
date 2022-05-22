@@ -1,4 +1,4 @@
-import 'package:films/presentation/home/catalog_page.dart';
+import 'package:films/presentation/catalog/catalog_page.dart';
 import 'package:films/presentation/home/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -9,14 +9,14 @@ class MainPage extends StatefulWidget {
 
   static const List<_Tab> _tabs = <_Tab>[
     _Tab(
-      icon: Icon(Icons.library_books),
-      label: 'Список',
-      page: HomePage(title: 'MAD Films'),
-    ),
-    _Tab(
       icon: Icon(Icons.grid_view),
       label: 'Каталог',
-      page: CatalogPage(title: 'MAD Films'),
+      page: CatalogPage(),
+    ),
+    _Tab(
+      icon: Icon(Icons.library_books),
+      label: 'Список',
+      page: HomePage(),
     ),
   ];
 
@@ -27,7 +27,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
+  void _onItemTap(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -49,7 +49,7 @@ class _MainPageState extends State<MainPage> {
           },
         ),
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: _onItemTap,
       ),
     );
   }

@@ -1,8 +1,9 @@
-import 'package:films/components/widgets/favorite_button.dart';
-import 'package:films/components/widgets/image_network.dart';
-import 'package:films/components/widgets/primary_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:films/components/constants.dart';
+import 'package:films/components/widgets/buttons/favorite_button.dart';
+import 'package:films/components/widgets/buttons/primary_button.dart';
 import 'package:films/domain/models/film_card_model.dart';
-import 'package:films/presentation/detailed/detailed_page.dart';
+import 'package:films/presentation/detail/detail_page.dart';
 import 'package:flutter/material.dart';
 
 class FilmCard extends StatelessWidget {
@@ -12,16 +13,14 @@ class FilmCard extends StatelessWidget {
     required this.picture,
     required this.voteAverage,
     required this.releaseDate,
-    required this.description,
     Key? key,
   }) : super(key: key);
 
   final int id;
   final String title;
-  final String picture;
-  final double voteAverage;
-  final String releaseDate;
-  final String description;
+  final String? picture;
+  final double? voteAverage;
+  final String? releaseDate;
 
   factory FilmCard.fromFilmModel({
     required FilmCardModel model,
@@ -33,20 +32,20 @@ class FilmCard extends StatelessWidget {
       picture: model.picture,
       voteAverage: model.voteAverage,
       releaseDate: model.releaseDate,
-      description: model.description,
       key: key,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(25),
         boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Colors.grey,
             offset: Offset(0, 1),
-            blurRadius: 2,
+            blurRadius: 3,
           ),
         ],
       ),
@@ -54,39 +53,23 @@ class FilmCard extends StatelessWidget {
         children: [
           Positioned.fill(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: ImageNetwork(picture),
+              borderRadius: BorderRadius.circular(25),
+              child: CachedNetworkImage(
+                imageUrl: picture!,
+                errorWidget: (_, __, ___) =>
+                    Image.network(FilmQuery.missingPictureUrl),
+                cacheManager: FilmPicture.pictureCache,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Positioned(
             left: 5,
-            child: _RatingChip(voteAverage),
+            child: _RatingChip(voteAverage!),
           ),
           const Positioned(
             right: 5,
             child: FavoriteButton(),
-          ),
-          Positioned(
-            left: 5,
-            right: 5,
-            bottom: 50,
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                shadows: [
-                  Shadow(
-                    color: Colors.black,
-                    offset: Offset(1, 1),
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
           ),
           Positioned(
             left: 5,
@@ -97,17 +80,39 @@ class FilmCard extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                  '/detailed',
-                  arguments: DetailedArguments(
+                  '/details',
+                  arguments: DetailArguments(
                     id,
                     title,
-                    picture,
+                    picture!,
                     voteAverage,
                     releaseDate,
-                    description,
                   ),
                 );
               },
+            ),
+          ),
+          Positioned(
+            left: 5,
+            right: 5,
+            bottom: 50,
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    color: Colors.black,
+                    offset: Offset(0, 1),
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -125,7 +130,7 @@ class _RatingChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Chip(
       avatar: const Icon(
-        Icons.star,
+        Icons.star_border,
         color: Colors.white,
       ),
       label: Text(

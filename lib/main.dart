@@ -1,5 +1,4 @@
-import 'package:films/components/widgets/not_found_page.dart';
-import 'package:films/presentation/detailed/detailed_page.dart';
+import 'package:films/presentation/detail/detail_page.dart';
 import 'package:films/presentation/main_page.dart';
 import 'package:films/presentation/settings/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class FilmApp extends StatelessWidget {
         primarySwatch: Colors.deepOrange,
       ),
       initialRoute: MainPage.path,
-      onGenerateRoute: (settings) {
+      onGenerateRoute: (RouteSettings settings) {
         if (settings.name == MainPage.path) {
           return MaterialPageRoute(
             builder: (context) {
@@ -39,21 +38,19 @@ class FilmApp extends StatelessWidget {
           );
         }
 
-        if (settings.name == DetailedPage.path) {
-          final DetailedArguments arguments =
-              settings.arguments as DetailedArguments;
+        if (settings.name == DetailPage.path) {
+          final DetailArguments arguments =
+              settings.arguments as DetailArguments;
           return MaterialPageRoute(
             builder: (context) {
-              return DetailedPage(
+              return DetailPage(
                 arguments: arguments,
               );
             },
           );
         }
 
-        return MaterialPageRoute(
-          builder: (_) => const NotFoundPage(),
-        );
+        return null;
       },
     );
   }

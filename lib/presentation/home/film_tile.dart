@@ -1,5 +1,6 @@
-import 'package:films/components/widgets/favorite_button.dart';
-import 'package:films/components/widgets/image_network.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:films/components/constants.dart';
+import 'package:films/components/widgets/buttons/favorite_button.dart';
 import 'package:films/domain/models/film_card_model.dart';
 import 'package:flutter/material.dart';
 
@@ -10,16 +11,14 @@ class FilmTile extends StatelessWidget {
     required this.picture,
     required this.voteAverage,
     required this.releaseDate,
-    required this.description,
     Key? key,
   }) : super(key: key);
 
   final int id;
   final String title;
-  final String picture;
-  final double voteAverage;
-  final String releaseDate;
-  final String description;
+  final String? picture;
+  final double? voteAverage;
+  final String? releaseDate;
 
   factory FilmTile.fromFilmModel({
     required FilmCardModel model,
@@ -31,7 +30,6 @@ class FilmTile extends StatelessWidget {
       picture: model.picture,
       voteAverage: model.voteAverage,
       releaseDate: model.releaseDate,
-      description: model.description,
       key: key,
     );
   }
@@ -46,18 +44,21 @@ class FilmTile extends StatelessWidget {
           BoxShadow(
             color: Colors.grey,
             offset: Offset(0, 1),
-            blurRadius: 2,
+            blurRadius: 3,
           ),
         ],
       ),
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: ImageNetwork(picture),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: CachedNetworkImage(
+                imageUrl: picture!,
+                errorWidget: (_, __, ___) =>
+                    Image.network(FilmQuery.missingPictureUrl),
+                cacheManager: FilmPicture.pictureCache,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -83,36 +84,30 @@ class FilmTile extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
-                  Text(
-                    description,
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Row(
-                      children: <Widget>[
-                        const Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: Icon(
-                            Icons.star,
-                            color: Colors.deepOrange,
-                          ),
+                  Row(
+                    children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.star,
+                          color: Colors.deepOrange,
                         ),
-                        Text(
-                          voteAverage.toStringAsFixed(1),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: voteAverage < 6
-                                ? Colors.red
-                                : voteAverage >= 8
-                                    ? Colors.green
-                                    : Colors.black,
-                          ),
+                      ),
+                      Text(
+                        voteAverage!.toStringAsFixed(1),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: voteAverage == null
+                              ? Colors.deepOrange
+                              : voteAverage! < 5
+                                  ? Colors.red
+                                  : voteAverage! >= 8
+                                      ? Colors.green
+                                      : Colors.black,
                         ),
-                        const FavoriteButton(),
-                      ],
-                    ),
+                      ),
+                      const FavoriteButton(),
+                    ],
                   ),
                 ],
               ),
