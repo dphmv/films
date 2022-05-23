@@ -1,11 +1,15 @@
 import 'package:films/components/constants.dart';
+import 'package:films/presentation/catalog/catalog_page.dart';
 import 'package:flutter/material.dart';
 
-void showErrorDialog(BuildContext context, {required String error}) {
-  showDialog(
-    context: context,
-    builder: (_) => ErrorDialog(error),
-  );
+void showErrorDialog({BuildContext? context, required String error}) {
+  final _context = context ?? CatalogPage.globalKey.currentContext;
+  if (_context != null) {
+    showDialog(
+      context: _context,
+      builder: (_) => ErrorDialog(error),
+    );
+  }
 }
 
 class ErrorDialog extends StatelessWidget {

@@ -1,6 +1,12 @@
+import 'package:films/data/repositories/films_repository.dart';
+import 'package:films/error_bloc/error_bloc.dart';
+import 'package:films/error_bloc/error_event.dart';
+import 'package:films/presentation/catalog/bloc/catalog_bloc.dart';
 import 'package:films/presentation/catalog/catalog_page.dart';
+import 'package:films/presentation/home/bloc/home_bloc.dart';
 import 'package:films/presentation/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -36,7 +42,35 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MainPage._tabs.elementAt(_selectedIndex).page,
+      body: BlocProvider<ErrorBloc>(
+        lazy: false,
+        create: (_) => ErrorBloc(),
+        child: RepositoryProvider<FilmsRepository>(
+          lazy: true,
+          create: (BuildContext context) => FilmsRepository(
+            onErrorHandler: (String code, String message) {
+              context
+                  .read<ErrorBloc>()
+                  .add(ShowDialogEvent(title: code, message: message));
+            },
+          ),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<CatalogBloc>(
+                lazy: false,
+                create: (BuildContext context) =>
+                    CatalogBloc(context.read<FilmsRepository>()),
+              ),
+              BlocProvider<HomeBloc>(
+                lazy: false,
+                create: (BuildContext context) =>
+                    HomeBloc(context.read<FilmsRepository>()),
+              ),
+            ],
+            child: MainPage._tabs.elementAt(_selectedIndex).page,
+          ),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: List.generate(
           MainPage._tabs.length,

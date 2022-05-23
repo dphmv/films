@@ -1,3 +1,4 @@
+import 'package:films/components/constants.dart';
 import 'package:flutter/material.dart';
 
 class ImageNetwork extends StatelessWidget {
@@ -24,6 +25,34 @@ class ImageNetwork extends StatelessWidget {
         );
       },
       fit: fit,
+    );
+  }
+}
+
+class Missing extends StatelessWidget {
+  const Missing({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Image.network(
+        FilmQuery.missingPictureUrl,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+}
+
+class Empty extends StatelessWidget {
+  const Empty({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Image.network(
+        FilmQuery.emptyPictureUrl,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

@@ -1,8 +1,11 @@
-import 'package:films/components/constants.dart';
-import 'package:films/data/repositories/films_repository.dart';
+import 'package:films/components/widgets/image_network.dart';
 import 'package:films/domain/models/basic_model.dart';
+import 'package:films/presentation/home/bloc/home_bloc.dart';
+import 'package:films/presentation/home/bloc/home_event.dart';
+import 'package:films/presentation/home/bloc/home_state.dart';
 import 'package:films/presentation/home/film_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,12 +15,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<BasicModel?>? dataLoadingState;
-
   @override
   void didChangeDependencies() {
-    dataLoadingState ??= FilmsRepository.loadData(context,
-        ratingFrom: FilmQuery.ratingFrom, keyword: FilmQuery.initialWord);
+    context.read<HomeBloc>().add(LoadDataEvent());
     super.didChangeDependencies();
   }
 
@@ -44,58 +44,39 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: FutureBuilder<BasicModel?>(
-        future: dataLoadingState,
-        builder: (BuildContext context, AsyncSnapshot<BasicModel?> data) {
-          return data.connectionState != ConnectionState.done
-              ? const Center(child: CircularProgressIndicator())
-              : data.hasData
-                  ? data.data?.film?.isNotEmpty == true
-                      ? Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: ListView.builder(
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: FilmTile.fromFilmModel(
-                                  model: data.data!.film![index],
-                                  key: ValueKey<int>(
-                                    data.data?.film?[index].id ?? -1,
-                                  ),
-                                ),
-                              );
-                            },
-                            itemCount: data.data?.film?.length ?? 0,
-                          ),
-                        )
-                      : const _Empty()
-                  : const _Missing();
+      body: BlocBuilder<HomeBloc, HomeState>(
+        buildWhen: (oldState, newState) => oldState.data != newState.data,
+        builder: (context, state) {
+          return FutureBuilder<BasicModel?>(
+            future: state.data,
+            builder: (BuildContext context, AsyncSnapshot<BasicModel?> data) {
+              return data.connectionState != ConnectionState.done
+                  ? const Center(child: CircularProgressIndicator())
+                  : data.hasData
+                      ? data.data?.film?.isNotEmpty == true
+                          ? Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: ListView.builder(
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: FilmTile.fromFilmModel(
+                                      model: data.data!.film![index],
+                                      key: ValueKey<int>(
+                                        data.data?.film?[index].id ?? -1,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: data.data?.film?.length ?? 0,
+                              ),
+                            )
+                          : const Empty()
+                      : const Missing();
+            },
+          );
         },
       ),
-    );
-  }
-}
-
-class _Missing extends StatelessWidget {
-  const _Missing({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.network(
-      FilmQuery.missingPictureUrl,
-      fit: BoxFit.cover,
-    );
-  }
-}
-
-class _Empty extends StatelessWidget {
-  const _Empty({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.network(
-      FilmQuery.emptyPictureUrl,
-      fit: BoxFit.cover,
     );
   }
 }

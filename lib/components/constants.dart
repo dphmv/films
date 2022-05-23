@@ -10,8 +10,6 @@ class FilmQuery {
       'https://risovach.ru/upload/2015/11/mem/lenivec_98364492_orig_.jpg';
 
   static const String initialWord = 'gentlemen';
-  static const int ratingFrom = 0;
-  static const int cunningRating = 8;
 
   static const String apiKey = '3a82711e-cd3e-4507-8959-bee16d51a6c4';
   static const String contentType = 'application/json';
