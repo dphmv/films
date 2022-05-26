@@ -13,6 +13,8 @@ class FilmCard extends StatelessWidget {
     required this.picture,
     required this.voteAverage,
     required this.releaseDate,
+    this.onClickFavoriteButton,
+    required this.isFavorited,
     Key? key,
   }) : super(key: key);
 
@@ -22,8 +24,13 @@ class FilmCard extends StatelessWidget {
   final double? voteAverage;
   final String? releaseDate;
 
+  final VoidCallback? onClickFavoriteButton;
+  final bool isFavorited;
+
   factory FilmCard.fromFilmModel({
     required FilmCardModel model,
+    required isFavorited,
+    required onClickFavoriteButton,
     Key? key,
   }) {
     return FilmCard(
@@ -32,6 +39,8 @@ class FilmCard extends StatelessWidget {
       picture: model.picture,
       voteAverage: model.voteAverage,
       releaseDate: model.releaseDate,
+      isFavorited: isFavorited,
+      onClickFavoriteButton: onClickFavoriteButton,
       key: key,
     );
   }
@@ -67,9 +76,14 @@ class FilmCard extends StatelessWidget {
             left: 5,
             child: _RatingChip(voteAverage!),
           ),
-          const Positioned(
+          Positioned(
             right: 5,
-            child: FavoriteButton(),
+            child: FavoriteButton(
+              isFavorited,
+              onPressed: () {
+                onClickFavoriteButton?.call();
+              },
+            ),
           ),
           Positioned(
             left: 5,

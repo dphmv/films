@@ -11,6 +11,8 @@ class FilmTile extends StatelessWidget {
     required this.picture,
     required this.voteAverage,
     required this.releaseDate,
+    this.onClickFavoriteButton,
+    required this.isFavorited,
     Key? key,
   }) : super(key: key);
 
@@ -19,9 +21,13 @@ class FilmTile extends StatelessWidget {
   final String? picture;
   final double? voteAverage;
   final String? releaseDate;
+  final VoidCallback? onClickFavoriteButton;
+  final bool isFavorited;
 
   factory FilmTile.fromFilmModel({
     required FilmCardModel model,
+    required isFavorited,
+    required onClickFavoriteButton,
     Key? key,
   }) {
     return FilmTile(
@@ -30,6 +36,8 @@ class FilmTile extends StatelessWidget {
       picture: model.picture,
       voteAverage: model.voteAverage,
       releaseDate: model.releaseDate,
+      isFavorited: isFavorited,
+      onClickFavoriteButton: onClickFavoriteButton,
       key: key,
     );
   }
@@ -106,7 +114,12 @@ class FilmTile extends StatelessWidget {
                                       : Colors.black,
                         ),
                       ),
-                      const FavoriteButton(),
+                      FavoriteButton(
+                        isFavorited,
+                        onPressed: () {
+                          onClickFavoriteButton?.call();
+                        },
+                      ),
                     ],
                   ),
                 ],

@@ -28,3 +28,7 @@ class FilmPicture {
   static CacheManager pictureCache =
       CacheManager(Config('filmPicture', stalePeriod: const Duration(days: 7)));
 }
+
+class UserQuery {
+  static const String keyName = 'name';
+}

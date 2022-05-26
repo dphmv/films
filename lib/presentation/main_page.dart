@@ -3,7 +3,6 @@ import 'package:films/error_bloc/error_bloc.dart';
 import 'package:films/error_bloc/error_event.dart';
 import 'package:films/presentation/catalog/bloc/catalog_bloc.dart';
 import 'package:films/presentation/catalog/catalog_page.dart';
-import 'package:films/presentation/home/bloc/home_bloc.dart';
 import 'package:films/presentation/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +20,7 @@ class MainPage extends StatefulWidget {
     ),
     _Tab(
       icon: Icon(Icons.library_books),
-      label: 'Список',
+      label: 'Избранное',
       page: HomePage(),
     ),
   ];
@@ -54,19 +53,10 @@ class _MainPageState extends State<MainPage> {
                   .add(ShowDialogEvent(title: code, message: message));
             },
           ),
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<CatalogBloc>(
-                lazy: false,
-                create: (BuildContext context) =>
-                    CatalogBloc(context.read<FilmsRepository>()),
-              ),
-              BlocProvider<HomeBloc>(
-                lazy: false,
-                create: (BuildContext context) =>
-                    HomeBloc(context.read<FilmsRepository>()),
-              ),
-            ],
+          child: BlocProvider<CatalogBloc>(
+            lazy: false,
+            create: (BuildContext context) =>
+                CatalogBloc(context.read<FilmsRepository>()),
             child: MainPage._tabs.elementAt(_selectedIndex).page,
           ),
         ),

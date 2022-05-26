@@ -1,3 +1,4 @@
+import 'package:films/components/widgets/not_found_page.dart';
 import 'package:films/presentation/detail/detail_page.dart';
 import 'package:films/presentation/main_page.dart';
 import 'package:films/presentation/settings/settings_page.dart';
@@ -27,13 +28,9 @@ class FilmApp extends StatelessWidget {
         }
 
         if (settings.name == SettingsPage.path) {
-          final SettingsArguments arguments =
-              settings.arguments as SettingsArguments;
           return MaterialPageRoute(
             builder: (context) {
-              return SettingsPage(
-                arguments: arguments,
-              );
+              return const SettingsPage();
             },
           );
         }
@@ -50,7 +47,9 @@ class FilmApp extends StatelessWidget {
           );
         }
 
-        return null;
+        return MaterialPageRoute(
+          builder: (_) => const NotFoundPage(),
+        );
       },
     );
   }

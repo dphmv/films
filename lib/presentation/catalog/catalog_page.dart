@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:films/components/delayed_action.dart';
 import 'package:films/components/widgets/image_network.dart';
 import 'package:films/domain/models/basic_model.dart';
@@ -93,15 +94,16 @@ class _CatalogPageState extends State<CatalogPage> {
             onPressed: () {
               Navigator.pushNamed(
                 context,
-                '/settings',
-                arguments: const SettingsArguments('dph.develop@gmail.com'),
+                SettingsPage.path,
               );
             },
           ),
         ],
       ),
       body: BlocBuilder<CatalogBloc, CatalogState>(
-        buildWhen: (oldState, newState) => oldState.data != newState.data,
+        buildWhen: (oldState, newState) =>
+            oldState.data != newState.data ||
+            oldState.favouritesFilms != newState.favouritesFilms,
         builder: (context, state) {
           return RefreshIndicator(
             onRefresh: _refresh,
@@ -117,10 +119,31 @@ class _CatalogPageState extends State<CatalogPage> {
                                 child: GridView.builder(
                                   itemBuilder:
                                       (BuildContext context, int index) {
+                                    bool isFavourite = false;
+                                    if (state.favouritesFilms?.isNotEmpty ==
+                                        true) {
+                                      var filmsFavourite = state.favouritesFilms
+                                          ?.firstWhereOrNull((element) =>
+                                              element.id ==
+                                              data.data?.film?[index].id);
+                                      if (filmsFavourite != null) {
+                                        isFavourite = true;
+                                      }
+                                    }
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: FilmCard.fromFilmModel(
                                         model: data.data!.film![index],
+                                        isFavorited: isFavourite,
+                                        onClickFavoriteButton: () {
+                                          isFavourite = !isFavourite;
+                                          context.read<CatalogBloc>().add(
+                                                ChangedFavourites(
+                                                  model:
+                                                      data.data?.film?[index],
+                                                ),
+                                              );
+                                        },
                                         key: ValueKey<int>(
                                           data.data?.film?[index].id ?? -1,
                                         ),
