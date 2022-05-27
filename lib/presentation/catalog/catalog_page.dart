@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:films/components/delayed_action.dart';
+import 'package:films/components/locals/locals.dart';
 import 'package:films/components/widgets/image_network.dart';
 import 'package:films/domain/models/basic_model.dart';
 import 'package:films/presentation/catalog/bloc/catalog_bloc.dart';
@@ -56,13 +57,13 @@ class _CatalogPageState extends State<CatalogPage> {
               )
             : TextField(
                 controller: controller,
-                decoration: const InputDecoration(
-                  icon: Icon(
+                decoration: InputDecoration(
+                  icon: const Icon(
                     Icons.search,
                     color: Colors.white,
                   ),
-                  hintText: 'Что будем искать?',
-                  hintStyle: TextStyle(
+                  hintText: context.locale.search,
+                  hintStyle: const TextStyle(
                     color: Colors.white,
                   ),
                 ),

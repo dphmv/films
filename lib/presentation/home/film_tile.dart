@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:films/components/constants.dart';
+import 'package:films/components/locals/locals.dart';
 import 'package:films/components/widgets/buttons/favorite_button.dart';
 import 'package:films/domain/models/film_card_model.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class FilmTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      'Дата выхода: $releaseDate',
+                      '${context.locale.releaseDate}: $releaseDate',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),

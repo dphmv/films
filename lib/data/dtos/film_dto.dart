@@ -1,4 +1,3 @@
-import 'package:films/components/constants.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'film_dto.g.dart';
@@ -27,7 +26,7 @@ class FilmCardDTO {
   @JsonKey(name: 'kinopoiskId', defaultValue: 0)
   final int id;
 
-  @JsonKey(name: 'nameOriginal', defaultValue: FilmLocal.unknown)
+  @JsonKey(name: 'nameOriginal', defaultValue: '')
   final String title;
 
   @JsonKey(name: 'posterUrl')

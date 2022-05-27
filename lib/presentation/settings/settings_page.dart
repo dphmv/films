@@ -1,4 +1,7 @@
+import 'package:films/components/locals/locals.dart';
 import 'package:films/components/widgets/buttons/primary_button.dart';
+import 'package:films/locale_bloc/locale_bloc.dart';
+import 'package:films/locale_bloc/locale_event.dart';
 import 'package:films/presentation/settings/bloc/settings_bloc.dart';
 import 'package:films/presentation/settings/bloc/settings_event.dart';
 import 'package:films/presentation/settings/bloc/settings_state.dart';
@@ -32,14 +35,16 @@ class SettingsPageContent extends StatefulWidget {
 }
 
 class _SettingsPageContentState extends State<SettingsPageContent> {
+  bool isEnLocale = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text(
-          'Настройки',
-          style: TextStyle(
+        title: Text(
+          context.locale.settings,
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -65,20 +70,44 @@ class _SettingsPageContentState extends State<SettingsPageContent> {
                   builder: (context, state) {
                     return Text(state.name ?? '');
                   }),
-              PrimaryButton('Получить имя', onPressed: () {
+              PrimaryButton(context.locale.loadName, onPressed: () {
                 context.read<SettingsBloc>().add(LoadNameEvent());
               }),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: PrimaryButton('Сохранить имя', onPressed: () {
+                child: PrimaryButton(context.locale.saveName, onPressed: () {
                   context
                       .read<SettingsBloc>()
                       .add(const SaveNameEvent(name: 'Данила'));
                 }),
               ),
-              PrimaryButton('Очистить имя', onPressed: () {
+              PrimaryButton(context.locale.clearName, onPressed: () {
                 context.read<SettingsBloc>().add(ClearNameEvent());
               }),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: isEnLocale,
+                      onChanged: (val) {
+                        isEnLocale = val ?? false;
+                        context.read<LocaleBloc>().add(ChangeLocaleEvent(
+                              isEnLocale
+                                  ? availableLocales[enLocale]!
+                                  : availableLocales[ruLocale]!,
+                            ));
+                      },
+                    ),
+                    Flexible(
+                      child: Text(
+                        context.locale.switchLanguage,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

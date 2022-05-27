@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:films/components/constants.dart';
+import 'package:films/components/locals/locals.dart';
 import 'package:flutter/material.dart';
 
 class DetailArguments {
@@ -61,7 +62,7 @@ class DetailPage extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          'Дата выхода: ${arguments.releaseDate}',
+                          '${context.locale.releaseDate}: ${arguments.releaseDate}',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const Padding(
@@ -73,15 +74,7 @@ class DetailPage extends StatelessWidget {
                         ),
                         Text(
                           arguments.voteAverage!.toStringAsFixed(1),
-                          style: const TextStyle(fontSize: 16
-                              // color: arguments.voteAverage == null
-                              //     ? Colors.deepOrange
-                              //     : arguments.voteAverage! < 5
-                              //         ? Colors.red
-                              //         : arguments.voteAverage! >= 8
-                              //             ? Colors.green
-                              //             : Colors.black,
-                              ),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),

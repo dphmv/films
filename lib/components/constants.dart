@@ -19,11 +19,6 @@ class FilmQuery {
   };
 }
 
-class FilmLocal {
-  static const String error = 'Ошибка';
-  static const String unknown = 'Неизвестно';
-}
-
 class FilmPicture {
   static CacheManager pictureCache =
       CacheManager(Config('filmPicture', stalePeriod: const Duration(days: 7)));

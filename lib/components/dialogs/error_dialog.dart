@@ -1,4 +1,4 @@
-import 'package:films/components/constants.dart';
+import 'package:films/components/locals/locals.dart';
 import 'package:films/presentation/catalog/catalog_page.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +49,7 @@ class ErrorDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '${FilmLocal.error} ${error ?? FilmLocal.unknown}',
+                      '${context.locale.error} ${error ?? context.locale.unknown}',
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge

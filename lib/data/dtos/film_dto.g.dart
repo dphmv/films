@@ -18,7 +18,7 @@ Map<String, dynamic> _$BasicDTOToJson(BasicDTO instance) => <String, dynamic>{
 
 FilmCardDTO _$FilmCardDTOFromJson(Map<String, dynamic> json) => FilmCardDTO(
       id: json['kinopoiskId'] as int? ?? 0,
-      title: json['nameOriginal'] as String? ?? 'Неизвестно',
+      title: json['nameOriginal'] as String? ?? '',
       picture: json['posterUrl'] as String?,
       voteAverage: (json['ratingKinopoisk'] as num?)?.toDouble() ?? 0,
       releaseDate: json['year'] as int?,

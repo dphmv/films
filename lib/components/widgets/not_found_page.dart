@@ -1,3 +1,4 @@
+import 'package:films/components/locals/locals.dart';
 import 'package:flutter/material.dart';
 
 class NotFoundPage extends StatelessWidget {
@@ -9,8 +10,8 @@ class NotFoundPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
       ),
-      body: const Center(
-        child: Text('Не найдено'),
+      body: Center(
+        child: Text(context.locale.notFound),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:films/components/constants.dart';
+import 'package:films/components/locals/locals.dart';
 import 'package:films/components/widgets/buttons/favorite_button.dart';
 import 'package:films/components/widgets/buttons/primary_button.dart';
 import 'package:films/domain/models/film_card_model.dart';
@@ -90,11 +91,11 @@ class FilmCard extends StatelessWidget {
             right: 5,
             bottom: 5,
             child: PrimaryButton(
-              'Подробнее',
+              context.locale.buttonText,
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                  '/details',
+                  DetailPage.path,
                   arguments: DetailArguments(
                     id,
                     title,
